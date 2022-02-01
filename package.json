@@ -1,0 +1,27 @@
+{
+  "name": "nuditae-backend",
+  "version": "1.0.0",
+  "description": "",
+  "author": "CONNEKT STUDIO",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon app.js",
+    "start": "NODE_ENV=production node app.js"
+  },
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "axios": "^0.21.1",
+    "cors": "^2.8.1",
+    "express": "^4.16.4",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^7.3.0",
+    "lodash": "^4.17.20",
+    "moment": "^2.24.0",
+    "mongodb": "^3.5.9",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.1.0",
+    "nodemon": "^1.18.9"
+  }
+}
