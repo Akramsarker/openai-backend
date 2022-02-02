@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const root = require("app-root-path");
 
+const authRoute = require(`${root}/middleware/authenticate`)
+
 const mongo = require(`${root}/services/mongo-crud`);
 getPersonData = async (req, res, next) => {
   try {
