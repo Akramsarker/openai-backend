@@ -1,5 +1,3 @@
-const jwt = require("jsonwebtoken");
-const root = require("app-root-path");
 var admin = require("firebase-admin");
 
 
