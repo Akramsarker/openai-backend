@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   const dotenv = require("dotenv");
   dotenv.config();
 }
@@ -17,7 +17,7 @@ app.use(cors());
 
 app.use("/api", require("./api/status"));
 app.use("/api", require("./api/person"));
-app.use("/api", require("./api/courses"));
+app.use("/api", require("./api/course"));
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
