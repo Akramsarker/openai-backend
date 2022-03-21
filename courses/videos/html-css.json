@@ -6,13 +6,13 @@
       {
         "name": "Course intro",
         "subheader": "What will you learn",
-        "duration": 200,
+        "duration": "02:00",
         "id": "course-intro"
       },
       {
         "name": "How internet works",
         "subheader": "frontend, backend, database",
-        "duration": 100,
+        "duration": "01:00",
         "id": "how-internet-works"
       }
     ]
@@ -102,32 +102,8 @@
       {
         "name": "01. Course Introduction",
         "subheader": "What’s inside the couse. How you start the couse?",
-        "duration": 300,
+        "duration": "02:00",
         "id": "first-video"
-      },
-      {
-        "name": "02. How Web Works?",
-        "subheader": "What is website actually, How it’s works",
-        "duration": 100,
-        "id": "second-video"
-      },
-      {
-        "name": "03. Course Introduction",
-        "subheader": "What’s inside the couse. How you start the couse?",
-        "duration": 300,
-        "id": "third-video"
-      },
-      {
-        "name": "04. How Web Works?",
-        "subheader": "What is website actually, How it’s works",
-        "duration": 100,
-        "id": "fourth-video"
-      },
-      {
-        "name": "05. How Web Works?",
-        "subheader": "What is website actually, How it’s works",
-        "duration": 100,
-        "id": "fiveth-video"
       }
     ]
   }
