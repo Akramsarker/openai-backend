@@ -7,6 +7,7 @@ const javascript = require(`${root}/courses/videos/html-css.json`)
 const vue = require(`${root}/courses/videos/html-css.json`)
 const git = require(`${root}/courses/videos/html-css.json`)
 const mongo = require(`${root}/services/mongo-crud`)
+const validity = new Date().getTime()
 
 
 const authRoute = require(`${root}/middleware/authenticate`)
@@ -23,8 +24,8 @@ const filterVideos = (object, hasPaid) => {
 const checkHasPaid = async (username, courseName) => {
     const person = await mongo.fetchOne('person', { username })
     const { recurring, courses } = person.subscriptions;
-    if (recurring?.status === 'active') return true;
-    if (courses[courseName].status === 'active') return true;
+    if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
+    if (courses[courseName].status === 'active' && courses[courseName].validTill > validity) return true;
 }
 
 getCourse = async (req, res, next) => {
