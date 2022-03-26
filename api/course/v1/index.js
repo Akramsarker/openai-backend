@@ -5,7 +5,6 @@ const javascript = require(`${root}/courses/videos/html-css.json`)
 const vue = require(`${root}/courses/videos/html-css.json`)
 const git = require(`${root}/courses/videos/html-css.json`)
 const mongo = require(`${root}/services/mongo-crud`)
-const validity = new Date().getTime()
 
 const authRoute = require(`${root}/middleware/authenticate`)
 
@@ -19,6 +18,7 @@ const filterVideos = (object, hasPaid) => {
     });
 }
 const checkHasPaid = async (username, courseName) => {
+    const validity = new Date().getTime()
     const person = await mongo.fetchOne('person', { username })
     const { recurring, courses } = person.subscriptions;
     if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
@@ -28,26 +28,21 @@ const checkHasPaid = async (username, courseName) => {
 getCourse = async (req, res, next) => {
     try {
         let filteredVideo = null
-        let hasPaid = false;
+        const hasPaid = await checkHasPaid(username, courseName);
         const { courseName, username } = req.query;
         if (courseName === "html") {
-            hasPaid = await checkHasPaid(username, 'html')
             filteredVideo = filterVideos(htmlCss, hasPaid)
         }
         else if (courseName === "css") {
-            hasPaid = checkHasPaid(username, 'css')
-            filteredVideo = filterVideos(htmlCss, hasPaid)
+            filteredVideo = filterVideos(css, hasPaid)
         }
         else if (courseName === "javascript") {
-            hasPaid = checkHasPaid(username, 'javascript')
             filteredVideo = filterVideos(javascript, hasPaid)
         }
         else if (courseName === 'vue') {
-            hasPaid = checkHasPaid(username, 'vue')
             filteredVideo = filterVideos(vue, hasPaid)
         }
         else if (courseName === "git") {
-            hasPaid = checkHasPaid(username, 'git')
             filteredVideo = filterVideos(git, hasPaid)
         }
         else {
