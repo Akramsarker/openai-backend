@@ -34,20 +34,22 @@ getCourse = async (req, res, next) => {
         const { courseName, username } = req.query;
         if (courseName === "html") {
             hasPaid = await checkHasPaid(username, 'html')
-            console.log(hasPaid)
             filteredVideo = filterVideos(htmlCss, hasPaid)
         }
         else if (courseName === "css") {
-            hasPaid = checkHasPaid(username, 'html')
+            hasPaid = checkHasPaid(username, 'css')
             filteredVideo = filterVideos(htmlCss, hasPaid)
         }
         else if (courseName === "javascript") {
+            hasPaid = checkHasPaid(username, 'javascript')
             filteredVideo = filterVideos(javascript, hasPaid)
         }
         else if (courseName === 'vue') {
+            hasPaid = checkHasPaid(username, 'vue')
             filteredVideo = filterVideos(vue, hasPaid)
         }
         else if (courseName === "git") {
+            hasPaid = checkHasPaid(username, 'git')
             filteredVideo = filterVideos(git, hasPaid)
         }
         else {
