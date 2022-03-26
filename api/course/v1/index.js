@@ -1,14 +1,11 @@
 const router = require("express").Router();
 const root = require("app-root-path");
-const e = require("express");
-const { valid } = require("joi");
 const htmlCss = require(`${root}/courses/videos/html-css.json`)
 const javascript = require(`${root}/courses/videos/html-css.json`)
 const vue = require(`${root}/courses/videos/html-css.json`)
 const git = require(`${root}/courses/videos/html-css.json`)
 const mongo = require(`${root}/services/mongo-crud`)
 const validity = new Date().getTime()
-
 
 const authRoute = require(`${root}/middleware/authenticate`)
 
