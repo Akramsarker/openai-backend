@@ -4,37 +4,59 @@ const htmlCss = require(`${root}/courses/videos/html-css.json`)
 const javascript = require(`${root}/courses/videos/html-css.json`)
 const vue = require(`${root}/courses/videos/html-css.json`)
 const git = require(`${root}/courses/videos/html-css.json`)
-
+const mongo = require(`${root}/services/mongo-crud`)
 
 const authRoute = require(`${root}/middleware/authenticate`)
 
+const filterVideos = (object, hasPaid) => {
+    const newObj = JSON.parse(JSON.stringify(object))
+    return Object.values(newObj).map(element => {
+        return element.videos.map(el => {
+            if (!el.isFree && !hasPaid) delete el.videoId;
+            return el;
+        })
+    });
+}
+const checkHasPaid = async (username, course_name) => {
+    const validity = new Date().getTime()
+    const person = await mongo.fetchOne('person', { username })
+    const { recurring, courses } = person.subscriptions;
+    if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
+    if (courses[course_name].status === 'active' && courses[course_name].validTill > validity) return true;
+}
 
 getCourse = async (req, res, next) => {
     try {
-        const name = req.params.name
-        console.log(name)
-        if (name === "html-css") {
-            return res.status(200).json({ success: true, htmlCss });
+        let filteredVideo = null
+        const { course_name, username } = req.query;
+        const hasPaid = await checkHasPaid(username, course_name);
+        if (course_name === "html") {
+            filteredVideo = filterVideos(htmlCss, hasPaid)
         }
-        else if (name === "javascript") {
-            return res.status(200).json({ success: true, javascript });
+        else if (course_name === "css") {
+            filteredVideo = filterVideos(css, hasPaid)
         }
-        else if (name === 'vue') {
-            return res.status(200).json({ success: true, vue });
+        else if (course_name === "javascript") {
+            filteredVideo = filterVideos(javascript, hasPaid)
         }
-        else if (name === "git") {
-            return res.status(200).json({ success: true, git });
+        else if (course_name === 'vue') {
+            filteredVideo = filterVideos(vue, hasPaid)
+        }
+        else if (course_name === "git") {
+            filteredVideo = filterVideos(git, hasPaid)
         }
         else {
             const status = 'NOT FOUND'
             return res.status(404).json({ success: true, status });
         }
+        return res.status(200).json({ success: true, videos: filteredVideo });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: error.message });
     }
 };
 
-router.get('/courses/:name', getCourse)
+router.get('/courses', getCourse)
 
 module.exports = router;
