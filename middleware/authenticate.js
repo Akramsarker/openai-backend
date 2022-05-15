@@ -1,22 +1,19 @@
 var admin = require("firebase-admin");
-
-
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 admin.initializeApp({
   credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-  })
-})
-
+    projectId: serviceAccount.project_id,
+    clientEmail: serviceAccount.client_email,
+    privateKey: serviceAccount.private_key.replace(/\\n/g, "\n"),
+  }),
+});
 
 const authRoute = async (req, res, next) => {
   if (req.headers?.authorization) {
     const token = req.headers.authorization.split(" ")[1];
 
     // verify user token
-    const decodedUser = await admin.auth().verifyIdToken(token)
-    console.log(decodedUser)
+    const decodedUser = await admin.auth().verifyIdToken(token);
     if (!decodedUser.email) {
       return res.status(403).json({ error: "Not authorized " });
     }
@@ -34,7 +31,6 @@ const authRoute = async (req, res, next) => {
   } else {
     return res.status(403).send("Unauthorized");
   }
-}
-
+};
 
 module.exports = authRoute;

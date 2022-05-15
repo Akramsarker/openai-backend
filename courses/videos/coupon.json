@@ -1,0 +1,38 @@
+[
+    {
+        "coupon": "nasim100",
+        "type": "yearly",
+        "validTill": 1650920377068,
+        "percentage": "100%"
+    },
+    {
+        "coupon": "moyen10",
+        "type": "monthly",
+        "validTill": 1650920377068,
+        "percentage": "10%"
+    },
+    {
+        "coupon": "rabbi10",
+        "type": "monthly",
+        "validTill": 1650920377068,
+        "percentage": "10%"
+    },
+    {
+        "coupon": "akram10",
+        "type": "monthly",
+        "validTill": 1650920377068,
+        "percentage": "10%"
+    },
+    {
+        "coupon": "moyen10",
+        "type": "monthly",
+        "validTill": 1650920377068,
+        "percentage": "10%"
+    },
+    {
+        "coupon": "moyen10",
+        "type": "monthly",
+        "validTill": 1650920377068,
+        "percentage": "10%"
+    }
+]

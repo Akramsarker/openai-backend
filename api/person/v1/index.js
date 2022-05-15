@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const root = require("app-root-path");
 
-const authRoute = require(`${root}/middleware/authenticate`)
+const authRoute = require(`${root}/middleware/authenticate`);
 
 const mongo = require(`${root}/services/mongo-crud`);
 getPersonData = async (req, res, next) => {
@@ -21,7 +21,6 @@ getPersonData = async (req, res, next) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
 setPersonData = async (req, res, next) => {
   try {
     const person = await mongo.insertOne("person", req.body);
@@ -51,9 +50,20 @@ updatePersonData = async (req, res, next) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+isUsernameUnique = async (req, res, next) => {
+  try {
+    const { username } = req.query;
+    const documentExists = await mongo.documentExists("person", { username });
+    return res.status(200).json({ success: true, isUsernameUnique: !documentExists });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 router.get("/person", getPersonData);
 router.put("/person/:username", updatePersonData);
-
 router.post("/person", setPersonData);
+router.get("/is-username-unique", isUsernameUnique);
 
 module.exports = router;
