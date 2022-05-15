@@ -17,32 +17,32 @@ const filterVideos = (object, hasPaid) => {
         })
     });
 }
-const checkHasPaid = async (username, courseName) => {
+    const checkHasPaid = async (username, course_name) => {
     const validity = new Date().getTime()
     const person = await mongo.fetchOne('person', { username })
     const { recurring, courses } = person.subscriptions;
     if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
-    if (courses[courseName].status === 'active' && courses[courseName].validTill > validity) return true;
+    if (courses[course_name].status === 'active' && courses[course_name].validTill > validity) return true;
 }
 
 getCourse = async (req, res, next) => {
     try {
         let filteredVideo = null
-        const hasPaid = await checkHasPaid(username, courseName);
-        const { courseName, username } = req.query;
-        if (courseName === "html") {
+        const { course_name, username } = req.query;
+        const hasPaid = await checkHasPaid(username, course_name);
+        if (course_name === "html") {
             filteredVideo = filterVideos(htmlCss, hasPaid)
         }
-        else if (courseName === "css") {
+        else if (course_name === "css") {
             filteredVideo = filterVideos(css, hasPaid)
         }
-        else if (courseName === "javascript") {
+        else if (course_name === "javascript") {
             filteredVideo = filterVideos(javascript, hasPaid)
         }
-        else if (courseName === 'vue') {
+        else if (course_name === 'vue') {
             filteredVideo = filterVideos(vue, hasPaid)
         }
-        else if (courseName === "git") {
+        else if (course_name === "git") {
             filteredVideo = filterVideos(git, hasPaid)
         }
         else {
