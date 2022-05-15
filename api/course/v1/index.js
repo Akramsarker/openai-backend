@@ -17,7 +17,8 @@ const filterVideos = (object, hasPaid) => {
         })
     });
 }
-    const checkHasPaid = async (username, course_name) => {
+const checkHasPaid = async (username, course_name) => {
+    if (!username) return false;
     const validity = new Date().getTime()
     const person = await mongo.fetchOne('person', { username })
     const { recurring, courses } = person.subscriptions;
