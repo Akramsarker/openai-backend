@@ -1,120 +1,120 @@
 {
-    "1": {
-        "number": "Chapter :0",
-        "title": "Getting Started",
-        "videos": [
-            {
-                "name": "Course intro",
-                "subheader": "What will you learn",
-                "duration": "02:00",
-                "id": "course-intro",
-                "isFree": true
-            },
-            {
-                "name": "How internet works",
-                "subheader": "frontend, backend, database",
-                "duration": "01:00",
-                "id": "how-internet-works",
-                "isFree": true
-            }
-        ]
-    },
-    "2": {
-        "number": "Chapter :1",
-        "title": "Basic HTML & HTML5",
-        "videos": [
-            {
-                "name": "Introduction to html",
-                "subheader": "What you will learn in this section",
-                "duration": "00:23",
-                "id": "introduction-to-html",
-                "videoId": "09b5389d-479b-48f7-aeb8-9bd2505c42c6",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/09b5389d-479b-48f7-aeb8-9bd2505c42c6/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/09b5389d-479b-48f7-aeb8-9bd2505c42c6/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "What is HTML",
-                "subheader": "How HTML works, tags, and structures",
-                "duration": "01:34",
-                "id": "what-is-html",
-                "videoId": "eb8dad31-3ac7-4d58-822f-2fe63ef7d99a",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/eb8dad31-3ac7-4d58-822f-2fe63ef7d99a/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/eb8dad31-3ac7-4d58-822f-2fe63ef7d99a/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "HTML layout, HTML file creation, opening",
-                "subheader": "how to create HTML file and open it, and creating html layout",
-                "duration": "10:55",
-                "id": "html-layout-and-tags",
-                "videoId": "a8977d6a-d762-46e1-b9ca-b0e0681af070",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/a8977d6a-d762-46e1-b9ca-b0e0681af070/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/a8977d6a-d762-46e1-b9ca-b0e0681af070/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "Meta tags & attributes",
-                "subheader": "Meta tags, and how different attributes work",
-                "duration": "06:54",
-                "id": "meta-tags-and-attributes",
-                "videoId": "b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "Comments, headings, paragraphs, and more",
-                "subheader": "Headings, paragraphs, links, images, list etc",
-                "duration": "10:04",
-                "id": "comments-headings-paragraphs-and-more",
-                "videoId": "66088d0e-59cb-47ed-a22a-183bed6a8fcf",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/66088d0e-59cb-47ed-a22a-183bed6a8fcf/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/66088d0e-59cb-47ed-a22a-183bed6a8fcf/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "Links, File Path, Images and Related Attributes",
-                "subheader": "Creating links, images, and using other related attributes",
-                "duration": "11:54",
-                "id": "links-file-path-images-and-related-attributes",
-                "videoId": "e30b5509-db46-4888-9e63-81cbfd7e9723",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/e30b5509-db46-4888-9e63-81cbfd7e9723/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/e30b5509-db46-4888-9e63-81cbfd7e9723/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "HTML List",
-                "subheader": "Ordered list, unordered list, and more",
-                "duration": "07:06",
-                "id": "html-list",
-                "videoId": "0c476893-7751-475f-a4d8-b01576cd99aa",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/0c476893-7751-475f-a4d8-b01576cd99aa/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/0c476893-7751-475f-a4d8-b01576cd99aa/preview.webp",
-                "isFree": false
-            },
-            {
-                "name": "Inline & Block Level elements",
-                "subheader": "Different elements, spacing, and more",
-                "duration": "06:13",
-                "id": "inline-and-block-level-elements",
-                "videoId": "02ebf783-6ef3-4318-803e-b12134996e0f",
-                "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/02ebf783-6ef3-4318-803e-b12134996e0f/thumbnail.jpg",
-                "preview": "https://vz-12c2e16f-ca0.b-cdn.net/02ebf783-6ef3-4318-803e-b12134996e0f/preview.webp",
-                "isFree": false
-            }
-        ]
-    },
-    "3": {
-        "number": "Chapter :3",
-        "title": "HTML LAYOUT",
-        "videos": [
-            {
-                "name": "01. Course Introduction",
-                "subheader": "What’s inside the couse. How you start the couse?",
-                "duration": "02:00",
-                "id": "first-video"
-            }
-        ]
-    }
+  "1": {
+    "number": "Chapter :0",
+    "title": "Getting Started",
+    "videos": [
+      {
+        "name": "Course intro",
+        "subheader": "What will you learn",
+        "duration": "02:00",
+        "id": "course-intro",
+        "isFree": true
+      },
+      {
+        "name": "How internet works",
+        "subheader": "frontend, backend, database",
+        "duration": "01:00",
+        "id": "how-internet-works",
+        "isFree": true
+      }
+    ]
+  },
+  "2": {
+    "number": "Chapter :1",
+    "title": "Basic HTML & HTML5",
+    "videos": [
+      {
+        "name": "Introduction to html",
+        "subheader": "What you will learn in this section",
+        "duration": "00:23",
+        "id": "introduction-to-html",
+        "videoId": "09b5389d-479b-48f7-aeb8-9bd2505c42c6",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/09b5389d-479b-48f7-aeb8-9bd2505c42c6/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/09b5389d-479b-48f7-aeb8-9bd2505c42c6/preview.webp",
+        "isFree": true
+      },
+      {
+        "name": "What is HTML",
+        "subheader": "How HTML works, tags, and structures",
+        "duration": "01:34",
+        "id": "what-is-html",
+        "videoId": "eb8dad31-3ac7-4d58-822f-2fe63ef7d99a",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/eb8dad31-3ac7-4d58-822f-2fe63ef7d99a/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/eb8dad31-3ac7-4d58-822f-2fe63ef7d99a/preview.webp",
+        "isFree": true
+      },
+      {
+        "name": "HTML layout, HTML file creation, opening",
+        "subheader": "how to create HTML file and open it, and creating html layout",
+        "duration": "10:55",
+        "id": "html-layout-and-tags",
+        "videoId": "a8977d6a-d762-46e1-b9ca-b0e0681af070",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/a8977d6a-d762-46e1-b9ca-b0e0681af070/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/a8977d6a-d762-46e1-b9ca-b0e0681af070/preview.webp",
+        "isFree": false
+      },
+      {
+        "name": "Meta tags & attributes",
+        "subheader": "Meta tags, and how different attributes work",
+        "duration": "06:54",
+        "id": "meta-tags-and-attributes",
+        "videoId": "b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/b6ca3fda-68f8-4c1f-8714-d8dbcfa35c72/preview.webp",
+        "isFree": false
+      },
+      {
+        "name": "Comments, headings, paragraphs, and more",
+        "subheader": "Headings, paragraphs, links, images, list etc",
+        "duration": "10:04",
+        "id": "comments-headings-paragraphs-and-more",
+        "videoId": "66088d0e-59cb-47ed-a22a-183bed6a8fcf",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/66088d0e-59cb-47ed-a22a-183bed6a8fcf/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/66088d0e-59cb-47ed-a22a-183bed6a8fcf/preview.webp",
+        "isFree": false
+      },
+      {
+        "name": "Links, File Path, Images and Related Attributes",
+        "subheader": "Creating links, images, and using other related attributes",
+        "duration": "11:54",
+        "id": "links-file-path-images-and-related-attributes",
+        "videoId": "e30b5509-db46-4888-9e63-81cbfd7e9723",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/e30b5509-db46-4888-9e63-81cbfd7e9723/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/e30b5509-db46-4888-9e63-81cbfd7e9723/preview.webp",
+        "isFree": false
+      },
+      {
+        "name": "HTML List",
+        "subheader": "Ordered list, unordered list, and more",
+        "duration": "07:06",
+        "id": "html-list",
+        "videoId": "0c476893-7751-475f-a4d8-b01576cd99aa",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/0c476893-7751-475f-a4d8-b01576cd99aa/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/0c476893-7751-475f-a4d8-b01576cd99aa/preview.webp",
+        "isFree": false
+      },
+      {
+        "name": "Inline & Block Level elements",
+        "subheader": "Different elements, spacing, and more",
+        "duration": "06:13",
+        "id": "inline-and-block-level-elements",
+        "videoId": "02ebf783-6ef3-4318-803e-b12134996e0f",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/02ebf783-6ef3-4318-803e-b12134996e0f/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/02ebf783-6ef3-4318-803e-b12134996e0f/preview.webp",
+        "isFree": false
+      }
+    ]
+  },
+  "3": {
+    "number": "Chapter :3",
+    "title": "HTML LAYOUT",
+    "videos": [
+      {
+        "name": "01. Course Introduction",
+        "subheader": "What’s inside the couse. How you start the couse?",
+        "duration": "02:00",
+        "id": "first-video"
+      }
+    ]
+  }
 }
