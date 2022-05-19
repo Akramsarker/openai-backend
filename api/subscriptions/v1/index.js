@@ -35,6 +35,7 @@ const addSubscription = async ({
 };
 
 const getDiscount = async (db, coupon, price, validFrom) => {
+  if (!coupon) return { finalPrice: price, discountedPrice: 0, percentage: 0 };
   const couponDetails = await mongo.fetchOne(db, "coupons", { coupon });
   if (!couponDetails) throw new Error("invalid coupon code!");
   else if (couponDetails.validTill < validFrom) throw new Error("Coupon code expired!");
@@ -76,5 +77,37 @@ postSubscription = async (req, res, next) => {
   }
 };
 
+hasPaid = async (req, res, next) => {
+  const { client, db } = await getMongoConnection();
+  try {
+    const { username, course_name, is_recurring, payment_success } = req.query;
+    const person = await mongo.fetchOne(db, "person", { username });
+    if (payment_success) {
+      if (is_recurring) {
+        person.subscriptions.recurring.status = "active";
+      } else {
+        person.subscriptions.courses[`${course_name}`].status = "active";
+      }
+    } else {
+      if (is_recurring) {
+        person.subscriptions.recurring.status = "failed";
+      } else {
+        person.subscriptions.courses[`${course_name}`].status = "failed";
+      }
+    }
+    const hasPaid = await mongo.updateOne(db, "person", { username }, person);
+    res.status(200).json({ success: hasPaid });
+  }
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  } finally {
+    await client.close();
+  }
+
+}
+
+
 router.post("/subscription", authRoute, postSubscription);
+router.put("/has-paid", authRoute, hasPaid);
 module.exports = router;
