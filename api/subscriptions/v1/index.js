@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const root = require("app-root-path");
 const mongo = require(`${root}/services/mongo-crud`);
+const getMongoConnection = require(`${root}/services/mongo-connect`)
 
 const authRoute = require(`${root}/middleware/authenticate`);
 
@@ -33,8 +34,8 @@ const addSubscription = async ({
   }
 };
 
-const getDiscount = async (coupon, price, validFrom) => {
-  const couponDetails = await mongo.fetchOne("coupons", { coupon });
+const getDiscount = async (db, coupon, price, validFrom) => {
+  const couponDetails = await mongo.fetchOne(db, "coupons", { coupon });
   if (!couponDetails) throw new Error("invalid coupon code!");
   else if (couponDetails.validTill < validFrom) throw new Error("Coupon code expired!");
   const discountedPrice = (couponDetails.percentage / 100) * price;
@@ -43,14 +44,15 @@ const getDiscount = async (coupon, price, validFrom) => {
 };
 
 postSubscription = async (req, res, next) => {
+  const { client, db } = await getMongoConnection();
   try {
     const { isRecurring, price, interval, coupon, course, userId, username } = req.body;
     const validFrom = new Date().getTime();
     let query = {};
     if (userId) query = { userId };
     if (username) query = { username };
-    let { subscriptions } = await mongo.fetchOne("person", query);
-    const { error, finalPrice, discountedPrice, percentage } = await getDiscount(coupon, price, validFrom);
+    let { subscriptions } = await mongo.fetchOne(db, "person", query);
+    const { error, finalPrice, discountedPrice, percentage } = await getDiscount(db, coupon, price, validFrom);
     if (error) res.status(400).send({ message: error.message });
     subscriptions = await addSubscription({
       subscriptions,
@@ -64,13 +66,15 @@ postSubscription = async (req, res, next) => {
       coupon,
       validFrom,
     });
-    const isSubscriptionAdded = await mongo.updateOne("person", query, { subscriptions });
-    return res.status(200).json({ success: isSubscriptionAdded });
+    const isSubscriptionAdded = await mongo.updateOne(db, "person", query, { subscriptions });
+    res.status(200).json({ success: isSubscriptionAdded });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
+  } finally {
+    await client.close();
   }
 };
 
-router.post("/subscription", postSubscription);
+router.post("/subscription", authRoute, postSubscription);
 module.exports = router;
