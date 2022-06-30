@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const root = require("app-root-path");
+const authRoute = require(`${root}/middleware/authenticate`);
 const html = require(`${root}/courses/videos/html.json`);
 const mongo = require(`${root}/services/mongo-crud`);
+const getMongoConnection = require(`${root}/services/mongo-connect`)
 
 const filterVideos = (object, hasPaid) => {
   const newObj = JSON.parse(JSON.stringify(object));
@@ -14,21 +16,22 @@ const filterVideos = (object, hasPaid) => {
   });
   return newObj;
 };
-const checkHasPaid = async (username, course_name) => {
-    if (!username) return false;
-    const validity = new Date().getTime()
-    const person = await mongo.fetchOne('person', { username })
-    if (!person) return false;
-    const { recurring, courses } = person.subscriptions;
-    if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
-    if (courses[course_name].status === 'active' && courses[course_name].validTill > validity) return true;
+const checkHasPaid = async (db, username, course_name) => {
+  if (!username) return false;
+  const validity = new Date().getTime()
+  const person = await mongo.fetchOne(db, 'person', { username })
+  if (!person) return false;
+  const { recurring, courses } = person.subscriptions;
+  if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
+  if (courses[course_name].status === 'active' && courses[course_name].validTill > validity) return true;
 }
 
 getCourse = async (req, res, next) => {
+  const { client, db } = await getMongoConnection();
   try {
     let filteredVideo = null;
     const { course_name, username } = req.query;
-    const hasPaid = await checkHasPaid(username, course_name);
+    const hasPaid = await checkHasPaid(db, username, course_name);
     if (course_name === "html") {
       filteredVideo = filterVideos(html, hasPaid);
       // } else if (course_name === "css") {
@@ -41,15 +44,17 @@ getCourse = async (req, res, next) => {
       //   filteredVideo = filterVideos(git, hasPaid);
     } else {
       const status = "NOT FOUND";
-      return res.status(404).json({ success: false, status });
+      res.status(404).json({ success: false, status });
     }
-    return res.status(200).json({ success: true, videos: filteredVideo });
+    res.status(200).json({ success: !!hasPaid, videos: filteredVideo });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
+  } finally {
+    await client.close();
   }
 };
 
-router.get("/courses", getCourse);
+router.get("/courses", authRoute, getCourse);
 
 module.exports = router;
