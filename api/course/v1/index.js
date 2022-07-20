@@ -3,7 +3,7 @@ const root = require("app-root-path");
 const authRoute = require(`${root}/middleware/authenticate`);
 const html = require(`${root}/courses/videos/html.json`);
 const mongo = require(`${root}/services/mongo-crud`);
-const getMongoConnection = require(`${root}/services/mongo-connect`)
+const getMongoConnection = require(`${root}/services/mongo-connect`);
 
 const filterVideos = (object, hasPaid) => {
   const newObj = JSON.parse(JSON.stringify(object));
@@ -18,13 +18,13 @@ const filterVideos = (object, hasPaid) => {
 };
 const checkHasPaid = async (db, username, course_name) => {
   if (!username) return false;
-  const validity = new Date().getTime()
-  const person = await mongo.fetchOne(db, 'person', { username })
+  const validity = new Date().getTime();
+  const person = await mongo.fetchOne(db, "person", { username });
   if (!person) return false;
   const { recurring, courses } = person.subscriptions;
-  if (recurring?.status === 'active' && recurring?.validTill > validity) return true;
-  if (courses[course_name].status === 'active' && courses[course_name].validTill > validity) return true;
-}
+  if (recurring?.status === "active" && recurring?.validTill > validity) return true;
+  if (courses[course_name].status === "active" && courses[course_name].validTill > validity) return true;
+};
 
 getCourse = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
@@ -55,6 +55,6 @@ getCourse = async (req, res, next) => {
   }
 };
 
-router.get("/courses", authRoute, getCourse);
+router.get("/courses", getCourse);
 
 module.exports = router;
