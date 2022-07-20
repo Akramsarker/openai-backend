@@ -2,6 +2,7 @@
   "1": {
     "number": "Chapter :0",
     "title": "Getting Started",
+    "openDefault": true,
     "videos": [
       {
         "name": "Course intro",
