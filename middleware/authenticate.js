@@ -10,27 +10,19 @@ admin.initializeApp({
 
 const authRoute = async (req, res, next) => {
   if (req.headers?.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
-
-    // verify user token
-    const decodedUser = await admin.auth().verifyIdToken(token);
-    if (!decodedUser.email) {
-      return res.status(403).json({ error: "Not authorized " });
-    }
     try {
-      req.fb_user_id = decodedUser.uid;
-      req.auth_user_id = req.session.current_user_id;
-      req.auth_org_id = req.session.current_org_id;
-      req.auth_role = req.session.current_user_role;
-      req.auth_session_id = req.session.current_session_id;
+      const token = req.headers.authorization.split(" ")[1];
+      // verify user token
+      const decodedUser = await admin.auth().verifyIdToken(token);
+      if (!decodedUser.email) {
+        throw new Error("No email found in decoded user");
+      }
       next();
     } catch (err) {
-      console.log(err);
-      return res.status(403).send("Unauthorized");
+      return res.status(403).send({ error: "Not Authorized", message: err.message });
     }
   } else {
-    return res.status(403).send("Unauthorized");
+    return res.status(403).send({ error: "Not Authorized", message: "No auth header found" });
   }
 };
-
 module.exports = authRoute;
