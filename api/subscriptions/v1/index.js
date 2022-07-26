@@ -10,19 +10,19 @@ postSubscription = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
     const { price, interval, coupon, userId, username, finalPrice, discountedPrice, percentage } = req.body;
-    const validFrom = new Date().getTime();
+    const subscribedAt = new Date().getTime();
     let query = {};
     if (userId) query = { userId };
     if (username) query = { username };
     let validTill;
-    if (interval === "monthly") validTill = validFrom + 2592000000; // 1 month
-    else if (interval === "yearly") validTill = validFrom + 31536000000; // 12 month
+    if (interval === "monthly") validTill = subscribedAt + 2592000000; // 1 month
+    else if (interval === "yearly") validTill = subscribedAt + 31536000000; // 12 month
     let { subscriptions } = await mongo.fetchOne(db, "person", query);
     const subscriptionObj = {
       price: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
-      validFrom,
+      subscribedAt,
       validTill,
-      status: "pending",
+      status: "processing",
     };
     subscriptions.recurring = { ...subscriptionObj, interval };
     const isSubscriptionAdded = await mongo.updateOne(db, "person", query, { subscriptions });
@@ -39,19 +39,17 @@ postCourseSubscription = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
     const { price, coupon, course, userId, username, finalPrice, discountedPrice, percentage } = req.body;
-    const validFrom = new Date().getTime();
+    const boughtAt = Date.now();
     let query = {};
     if (userId) query = { userId };
     if (username) query = { username };
-    const validTill = validFrom + 31536000000; // 12 month
     let { subscriptions } = await mongo.fetchOne(db, "person", query);
     const subscriptionObj = {
-      price: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
-      validFrom,
-      validTill,
-      status: "pending",
+      payment: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
+      status: "processing",
+      boughtAt,
     };
-    subscriptions.courses[`${course}`] = { ...subscriptionObj };
+    subscriptions[`${course}`] = { ...subscriptionObj };
     const isSubscriptionAdded = await mongo.updateOne(db, "person", query, { subscriptions });
     res.status(200).json({ success: isSubscriptionAdded });
   } catch (error) {
@@ -90,15 +88,15 @@ hasPaid = async (req, res, next) => {
     const person = await mongo.fetchOne(db, "person", { username });
     if (payment_success) {
       if (is_recurring) {
-        person.subscriptions.recurring.status = "active";
+        person.subscriptions.recurring.status = "paid";
       } else {
-        person.subscriptions.courses[`${course_name}`].status = "active";
+        person.subscriptions[`${course_name}`].status = "paid";
       }
     } else {
       if (is_recurring) {
-        person.subscriptions.recurring.status = "failed";
+        person.subscriptions.recurring.status = "error";
       } else {
-        person.subscriptions.courses[`${course_name}`].status = "failed";
+        person.subscriptions[`${course_name}`].status = "error";
       }
     }
     const hasPaid = await mongo.updateOne(db, "person", { username }, person);
