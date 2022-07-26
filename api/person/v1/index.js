@@ -4,6 +4,14 @@ const getMongoConnection = require(`${root}/services/mongo-connect`)
 
 const authRoute = require(`${root}/middleware/authenticate`);
 
+const getCourses = (obj) => {
+  const courses = [];
+  Object.keys(obj).filter((key) => key !== "recurring").map((key) => {
+    if (obj[key].status === 'paid') courses.push(key);
+  });
+  return courses;
+}
+
 const mongo = require(`${root}/services/mongo-crud`);
 getPersonData = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
@@ -16,6 +24,9 @@ getPersonData = async (req, res, next) => {
     if (email) query.email = email;
     if (userId) query.userId = userId;
     const person = await mongo.fetchOne(db, "person", query);
+    person.courses = getCourses(person.subscriptions);
+    delete person.subscriptions;
+
     res.status(200).json({ success: !!person, person });
   } catch (error) {
     console.log(error);
