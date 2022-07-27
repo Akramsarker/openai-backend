@@ -1,16 +1,18 @@
 const router = require("express").Router();
 const root = require("app-root-path");
-const getMongoConnection = require(`${root}/services/mongo-connect`)
+const getMongoConnection = require(`${root}/services/mongo-connect`);
 
 const authRoute = require(`${root}/middleware/authenticate`);
 
 const getCourses = (obj) => {
   const courses = [];
-  Object.keys(obj).filter((key) => key !== "recurring").map((key) => {
-    if (obj[key].status === 'paid') courses.push(key);
-  });
+  Object.keys(obj)
+    .filter((key) => key !== "recurring")
+    .map((key) => {
+      if (obj[key].status === "active") courses.push(key);
+    });
   return courses;
-}
+};
 
 const mongo = require(`${root}/services/mongo-crud`);
 getPersonData = async (req, res, next) => {
@@ -44,7 +46,7 @@ setPersonData = async (req, res, next) => {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
   } finally {
-    await client.close()
+    await client.close();
   }
 };
 updatePersonData = async (req, res, next) => {
