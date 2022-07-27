@@ -63,11 +63,10 @@ postCourseSubscription = async (req, res, next) => {
 getDiscount = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
-    const { coupon, price } = req.body;
+    const { coupon, price, course_name } = req.query;
     const now = new Date().getTime();
     if (!coupon) return { finalPrice: price, discountedPrice: 0, percentage: 0 };
-    const couponDetails = await mongo.fetchOne(db, "coupons", { coupon });
-    console.log(couponDetails);
+    const couponDetails = course_name ? await mongo.fetchOne(db, "coupons", { coupon, course: course_name }) : await mongo.fetchOne(db, "coupons", { coupon });
     if (!couponDetails) throw new Error("invalid coupon code!");
     else if (couponDetails.validTill < now) throw new Error("Coupon code expired!");
     const discountedPrice = (couponDetails.percentage / 100) * price;
@@ -113,7 +112,7 @@ hasPaid = async (req, res, next) => {
 
 
 router.post("/subscription", authRoute, postSubscription);
-router.post('/discount', authRoute, getDiscount);
+router.get('/discount', getDiscount);
 router.post('/course-subscription', authRoute, postCourseSubscription);
 router.put("/has-paid", authRoute, hasPaid);
 module.exports = router;
