@@ -144,7 +144,7 @@ hasPaid = async (req, res, next) => {
     const person = await mongo.fetchOne(db, "person", { username });
     const payment = await mongo.fetchOne(db, "payment", { _id: objectId(id) });
     if (success) {
-      if (is_recurring) {
+      if (isRecurring) {
         person.subscriptions.recurring.status = "active";
         payment.status = "success";
       } else {
@@ -152,7 +152,7 @@ hasPaid = async (req, res, next) => {
         payment.status = "success";
       }
     } else {
-      if (is_recurring) {
+      if (isRecurring) {
         person.subscriptions.recurring.status = "error";
         payment.status = "error";
       } else {
