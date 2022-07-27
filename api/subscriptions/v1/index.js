@@ -35,31 +35,6 @@ postSubscription = async (req, res, next) => {
   }
 };
 
-postCourseSubscription = async (req, res, next) => {
-  const { client, db } = await getMongoConnection();
-  try {
-    const { price, coupon, course, userId, username, finalPrice, discountedPrice, percentage } = req.body;
-    const boughtAt = Date.now();
-    let query = {};
-    if (userId) query = { userId };
-    if (username) query = { username };
-    let { subscriptions } = await mongo.fetchOne(db, "person", query);
-    const subscriptionObj = {
-      payment: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
-      status: "processing",
-      boughtAt,
-    };
-    subscriptions[`${course}`] = { ...subscriptionObj };
-    const isSubscriptionAdded = await mongo.updateOne(db, "person", query, { subscriptions });
-    res.status(200).json({ success: isSubscriptionAdded });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error.message });
-  } finally {
-    await client.close();
-  }
-};
-
 getDiscount = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
@@ -82,7 +57,7 @@ getDiscount = async (req, res, next) => {
   }
 };
 
-payment = async (req, res, next) => {
+createPayment = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
     const {
@@ -97,23 +72,39 @@ payment = async (req, res, next) => {
       discountedPrice,
       percentage,
       coupon,
+      isRecurring,
     } = req.body;
-    const validTill = new Date().getTime() + 600000; // 10 minutes
     let query = {};
     if (userId) query = { userId };
-    if (username) query = { username };
-    const paymentObj = {
-      username,
+    else if (username) query = { username };
+    const { subscriptions } = await mongo.fetchOne(db, "person", query);
+
+    const paymentObj = createPaymentObj({
       userId,
-      price: { regularPrice: price, discount: { amount: discountedPrice, percentage, coupon }, finalPrice },
-      status: "processing",
-      validTill,
-      course,
-      courseTitle,
+      username,
       fullName,
       email,
-    };
+      course,
+      courseTitle,
+      price,
+      finalPrice,
+      discountedPrice,
+      percentage,
+      coupon,
+      isRecurring,
+    });
+    const subscriptionObj = createSubscriptionObj({
+      price,
+      coupon,
+      course,
+      finalPrice,
+      discountedPrice,
+      percentage,
+      subscriptions,
+      isRecurring,
+    });
     const payment = await mongo.insertOne(db, "payment", paymentObj);
+    await mongo.updateOne(db, "person", query, { subscriptions: subscriptionObj });
     res.status(200).json({ success: !!payment, sessionId: payment._id });
   } catch (error) {
     console.log(error);
@@ -143,25 +134,13 @@ hasPaid = async (req, res, next) => {
     const { username, id, course, isRecurring, success } = req.body;
     const person = await mongo.fetchOne(db, "person", { username });
     const payment = await mongo.fetchOne(db, "payment", { _id: objectId(id) });
-    if (success) {
-      if (isRecurring) {
-        person.subscriptions.recurring.status = "active";
-        payment.status = "success";
-      } else {
-        person.subscriptions[`${course}`].status = "active";
-        payment.status = "success";
-      }
-    } else {
-      if (isRecurring) {
-        person.subscriptions.recurring.status = "error";
-        payment.status = "error";
-      } else {
-        person.subscriptions[`${course}`].status = "error";
-        payment.status = "error";
-      }
-    }
-    await mongo.updateOne(db, "payment", { _id: objectId(id) }, payment);
-    const hasPaid = await mongo.updateOne(db, "person", { username }, person);
+
+    const { updatedPerson, updatedPayment } = updateStatus({ isRecurring, success, person, course, payment });
+
+    await mongo.updateOne(db, "payment", { _id: objectId(id) }, updatedPayment);
+    console.log(updatedPerson);
+    const hasPaid = await mongo.updateOne(db, "person", { username }, updatedPerson);
+
     res.status(200).json({ success: hasPaid });
   } catch (error) {
     console.log(error);
@@ -171,10 +150,98 @@ hasPaid = async (req, res, next) => {
   }
 };
 
+const updateStatus = ({ isRecurring, success, person, course, payment }) => {
+  const paymentStatus = success ? "success" : "error";
+  const subscriptionStatus = success ? "active" : "error";
+  payment.status = paymentStatus;
+
+  if (isRecurring) {
+    person.subscriptions.recurring.status = subscriptionStatus;
+  } else {
+    person.subscriptions[`${course}`].status = subscriptionStatus;
+  }
+  return { updatedPerson: person, updatedPayment: payment };
+};
+
+const createPaymentObj = ({
+  userId,
+  username,
+  fullName,
+  email,
+  course,
+  courseTitle,
+  price,
+  finalPrice,
+  discountedPrice,
+  percentage,
+  coupon,
+  isRecurring,
+}) => {
+  const validTill = new Date().getTime() + 600000; // 10 minutes
+  return {
+    username,
+    userId,
+    price: { regularPrice: price, discount: { amount: discountedPrice, percentage, coupon }, finalPrice },
+    status: "processing",
+    validTill,
+    course,
+    courseTitle,
+    fullName,
+    email,
+    isRecurring,
+  };
+};
+
+const createSubscriptionObj = ({
+  price,
+  coupon,
+  course,
+  finalPrice,
+  discountedPrice,
+  percentage,
+  isRecurring = false,
+  subscriptions,
+}) => {
+  const boughtAt = Date.now();
+
+  if (isRecurring) {
+    let validTil = 0;
+    if (interval === "monthly") {
+      validTill = boughtAt + 2592000000; // 30 days
+    } else if (interval === "yearly") {
+      validTill = boughtAt + 31536000000; // 365 days
+    }
+    const recurring = {
+      price: {
+        price,
+        finalPrice,
+        discount: {
+          amount: discountedPrice,
+          percentage,
+          coupon,
+        },
+      },
+      validFrom: boughtAt,
+      validTill,
+      status: "pending",
+      interval: "monthly",
+    };
+    subscriptions.recurring = recurring;
+  } else {
+    const subscriptionObj = {
+      payment: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
+      status: "processing",
+      boughtAt,
+    };
+    subscriptions[`${course}`] = { ...subscriptionObj };
+  }
+
+  return subscriptions;
+};
+
 router.post("/subscription", authRoute, postSubscription);
 router.get("/discount", getDiscount);
-router.post("/course-subscription", authRoute, postCourseSubscription);
-router.post("/payment", authRoute, payment);
+router.post("/payment", authRoute, createPayment);
 router.get("/payment/:paymentId", getPaymentStatus);
 router.put("/has-paid", hasPaid);
 module.exports = router;
