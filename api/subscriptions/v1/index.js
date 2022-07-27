@@ -138,7 +138,6 @@ hasPaid = async (req, res, next) => {
     const { updatedPerson, updatedPayment } = updateStatus({ isRecurring, success, person, course, payment });
 
     await mongo.updateOne(db, "payment", { _id: objectId(id) }, updatedPayment);
-    console.log(updatedPerson);
     const hasPaid = await mongo.updateOne(db, "person", { username }, updatedPerson);
 
     res.status(200).json({ success: hasPaid });
