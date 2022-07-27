@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const root = require("app-root-path");
 const mongo = require(`${root}/services/mongo-crud`);
-const getMongoConnection = require(`${root}/services/mongo-connect`)
+const getMongoConnection = require(`${root}/services/mongo-connect`);
+const objectId = require('mongodb').ObjectID;
+
 
 const authRoute = require(`${root}/middleware/authenticate`);
 
@@ -83,7 +85,7 @@ getDiscount = async (req, res, next) => {
 payment = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
-    const { userId, username, course, courseTitle, price, finalPrice, discountedPrice, percentage, coupon } = req.body;
+    const { userId, username, fullName, email, course, courseTitle, price, finalPrice, discountedPrice, percentage, coupon } = req.body;
     const validTill = new Date().getTime() + 600000; // 10 minutes
     let query = {};
     if (userId) query = { userId };
@@ -95,10 +97,12 @@ payment = async (req, res, next) => {
       status: "processing",
       validTill,
       course,
-      courseTitle
+      courseTitle,
+      fullName,
+      email
     };
-    const payment = await mongo.updateOne(db, "payment", query, paymentObj);
-    res.status(200).json({ success: !!payment });
+    const payment = await mongo.insertOne(db, "payment", paymentObj);
+    res.status(200).json({ success: !!payment, sessionId: payment._id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
@@ -107,12 +111,27 @@ payment = async (req, res, next) => {
   }
 }
 
+getPaymentStatus = async (req, res, next) => {
+  const { client, db } = await getMongoConnection();
+  try {
+    const { paymentId } = req.params;
+    const payment = await mongo.fetchOne(db, "payment", { _id: objectId(paymentId) });
+    res.status(200).json({ success: !!payment, payment });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  } finally {
+    await client.close();
+  }
+}
+
+
 hasPaid = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
   try {
-    const { username, course_name, is_recurring, success } = req.query;
+    const { username, id, course_name, is_recurring, success } = req.query;
     const person = await mongo.fetchOne(db, "person", { username });
-    const payment = await mongo.fetchOne(db, "payment", { username });
+    const payment = await mongo.fetchOne(db, "payment", { _id: objectId(id) });
     if (success === "true") {
       if (is_recurring) {
         person.subscriptions.recurring.status = "paid";
@@ -130,7 +149,7 @@ hasPaid = async (req, res, next) => {
         payment.status = "error";
       }
     }
-    await mongo.updateOne(db, "payment", { username }, payment);
+    await mongo.updateOne(db, "payment", { _id: objectId(id) }, payment);
     const hasPaid = await mongo.updateOne(db, "person", { username }, person);
     res.status(200).json({ success: hasPaid });
   }
@@ -148,5 +167,6 @@ router.post("/subscription", authRoute, postSubscription);
 router.get('/discount', getDiscount);
 router.post('/course-subscription', authRoute, postCourseSubscription);
 router.post('/payment', authRoute, payment);
+router.get('/payment/:paymentId', getPaymentStatus);
 router.put("/has-paid", hasPaid);
 module.exports = router;
