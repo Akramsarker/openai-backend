@@ -110,6 +110,16 @@
         "isFree": false
       },
       {
+        "name": "Forms, Inputs and Attributes",
+        "subheader": "How form works, inputs, and other attributes",
+        "duration": "17:42",
+        "id": "forms-inputs-and-attributes",
+        "videoId": "7f601f57-9e4e-4729-bb1b-2b5cfb159bb3",
+        "thumbnail": "https://vz-12c2e16f-ca0.b-cdn.net/7f601f57-9e4e-4729-bb1b-2b5cfb159bb3/thumbnail.jpg",
+        "preview": "https://vz-12c2e16f-ca0.b-cdn.net/7f601f57-9e4e-4729-bb1b-2b5cfb159bb3/preview.webp",
+        "isFree": false
+      },
+      {
         "name": "HTML Tables",
         "subheader": "HTML tables, semantics, and more",
         "duration": "08:00",
