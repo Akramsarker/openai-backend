@@ -23,7 +23,7 @@ const checkHasPaid = async (db, username, course_name) => {
   if (!person) return false;
   const { recurring, courses } = person.subscriptions;
   if (recurring?.status === "active" && recurring?.validTill > validity) return true;
-  if (courses[course_name].status === "active" && courses[course_name].validTill > validity) return true;
+  if (courses[course_name].status === "active") return true;
 };
 
 getCourse = async (req, res, next) => {
