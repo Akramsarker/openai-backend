@@ -21,9 +21,9 @@ const checkHasPaid = async (db, username, course_name) => {
   const validity = new Date().getTime();
   const person = await mongo.fetchOne(db, "person", { username });
   if (!person) return false;
-  const { recurring, courses } = person.subscriptions;
-  if (recurring?.status === "active" && recurring?.validTill > validity) return true;
-  if (courses[course_name].status === "active") return true;
+  const recurring = person.subscription?.recurring;
+  if (recurring && recurring?.status === "active" && recurring?.validTill > validity) return true;
+  if (person.subscriptions[course_name].status === "active") return true;
 };
 
 getCourse = async (req, res, next) => {
