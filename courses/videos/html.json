@@ -5,8 +5,8 @@
     "openDefault": true,
     "videos": [
       {
-        "name": "Course intro & Coding Environment",
-        "subheader": "What will you learn & getting started",
+        "name": "Course intro",
+        "subheader": "What will you learn",
         "duration": "00:23",
         "id": "course-intro",
         "videoId": "5bc9d4c2-b42f-44d3-b423-640cda8f892b",
