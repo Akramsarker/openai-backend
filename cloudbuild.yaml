@@ -1,0 +1,29 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+
+    id: Build
+    args:
+      - "build"
+      - "--tag=gcr.io/$PROJECT_ID/connekt-camp-api:$BUILD_ID"
+      - "--file=./Dockerfile"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/connekt-camp-api:$BUILD_ID"]
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "connekt-camp-api",
+        "--image=gcr.io/$PROJECT_ID/connekt-camp-api:$BUILD_ID:$SHORT_SHA",
+        "--region=asia-south1",
+        "--allow-unauthenticated",
+        "--set-secrets",
+        "CLOUD_ENV=CLOUD_ENV:latest,
+        MONGO_DB_URI=MONGO_DB_URI:latest,
+        ALLOWED_ORIGINS=ALLOWED_ORIGINS:latest,
+        FIREBASE_SERVICE_ACCOUNT=FIREBASE_SERVICE_ACCOUNT:latest,
+      ]
