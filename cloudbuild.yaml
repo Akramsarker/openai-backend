@@ -1,6 +1,5 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-
     id: Build
     args:
       - "build"
@@ -25,3 +24,5 @@ steps:
         "CLOUD_ENV=CLOUD_ENV:latest, MONGO_DB_URI=MONGO_DB_URI:latest, ALLOWED_ORIGINS=ALLOWED_ORIGINS:latest,
         FIREBASE_SERVICE_ACCOUNT=FIREBASE_SERVICE_ACCOUNT:latest",
       ]
+options:
+  logging: CLOUD_LOGGING_ONLY
