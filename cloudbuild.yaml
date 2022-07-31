@@ -17,7 +17,7 @@ steps:
         "run",
         "deploy",
         "connekt-camp-api",
-        "--image=gcr.io/$PROJECT_ID/connekt-camp-api:$BUILD_ID:$SHORT_SHA",
+        "--image=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$BUILD_ID:$SHORT_SHA",
         "--region=asia-south1",
         "--allow-unauthenticated",
         "--set-secrets",
