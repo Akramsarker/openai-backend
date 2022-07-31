@@ -3,7 +3,7 @@ steps:
     id: Build
     args:
       - "build"
-      - "--tag=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api::$SHORT_SHA"
+      - "--tag=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$SHORT_SHA"
       - "--file=./Dockerfile"
       - "."
 
