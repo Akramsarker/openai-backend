@@ -20,8 +20,6 @@ steps:
         "--image=gcr.io/$PROJECT_ID/connekt-camp-api:$BUILD_ID:$SHORT_SHA",
         "--region=asia-south1",
         "--allow-unauthenticated",
-        "--service-account",
-        "141678934395@cloudbuild.gserviceaccount.com",
         "--set-secrets",
         "CLOUD_ENV=CLOUD_ENV:latest, MONGO_DB_URI=MONGO_DB_URI:latest, ALLOWED_ORIGINS=ALLOWED_ORIGINS:latest,
         FIREBASE_SERVICE_ACCOUNT=FIREBASE_SERVICE_ACCOUNT:latest",
