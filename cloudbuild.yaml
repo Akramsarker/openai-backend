@@ -3,13 +3,12 @@ steps:
     id: Build
     args:
       - "build"
-      - "--tag=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$BUILD_ID"
+      - "--tag=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api::$SHORT_SHA"
       - "--file=./Dockerfile"
       - "."
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$BUILD_ID"]
-
+    args: ["push", "asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$SHORT_SHA"]
 
   - name: "gcr.io/cloud-builders/gcloud"
     args:
@@ -18,8 +17,7 @@ steps:
         "run",
         "deploy",
         "connekt-camp-api",
-        "--image=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$BUILD_ID:$SHORT_SHA",
-        "--image=asia-south1-docker.pkg.dev/repo-path[:tag and/or @digest]"
+        "--image=asia-south1-docker.pkg.dev/$PROJECT_ID/connekt-camp-api:$SHORT_SHA",
         "--region=asia-south1",
         "--allow-unauthenticated",
         "--set-secrets",
