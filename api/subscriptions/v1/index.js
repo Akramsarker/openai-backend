@@ -6,34 +6,6 @@ const objectId = require("mongodb").ObjectID;
 
 const authRoute = require(`${root}/middleware/authenticate`);
 
-postSubscription = async (req, res, next) => {
-  const { client, db } = await getMongoConnection();
-  try {
-    const { price, interval, coupon, userId, username, finalPrice, discountedPrice, percentage } = req.body;
-    const subscribedAt = new Date().getTime();
-    let query = {};
-    if (userId) query = { userId };
-    if (username) query = { username };
-    let validTill;
-    if (interval === "monthly") validTill = subscribedAt + 2592000000; // 1 month
-    else if (interval === "yearly") validTill = subscribedAt + 31536000000; // 12 month
-    let { subscriptions } = await mongo.fetchOne(db, "person", query);
-    const subscriptionObj = {
-      price: { price, finalPrice, discount: { amount: discountedPrice, percentage, coupon } },
-      subscribedAt,
-      validTill,
-      status: "processing",
-    };
-    subscriptions.recurring = { ...subscriptionObj, interval };
-    const isSubscriptionAdded = await mongo.updateOne(db, "person", query, { subscriptions });
-    res.status(200).json({ success: isSubscriptionAdded });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error.message });
-  } finally {
-    await client.close();
-  }
-};
 
 getDiscount = async (req, res, next) => {
   const { client, db } = await getMongoConnection();
@@ -204,7 +176,7 @@ const createSubscriptionObj = ({
   const boughtAt = Date.now();
 
   if (isRecurring) {
-    let validTil = 0;
+    let validTill = 0;
     if (interval === "monthly") {
       validTill = boughtAt + 2592000000; // 30 days
     } else if (interval === "yearly") {
@@ -223,7 +195,7 @@ const createSubscriptionObj = ({
       validFrom: boughtAt,
       validTill,
       status: "pending",
-      interval: "monthly",
+      interval,
     };
     subscriptions.recurring = recurring;
   } else {
@@ -238,7 +210,6 @@ const createSubscriptionObj = ({
   return subscriptions;
 };
 
-router.post("/subscription", authRoute, postSubscription);
 router.get("/discount", getDiscount);
 router.post("/payment", authRoute, createPayment);
 router.get("/payment/:paymentId", getPaymentStatus);
