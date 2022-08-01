@@ -16,8 +16,7 @@ steps:
         "--region=asia-south1",
         "--allow-unauthenticated",
         "--set-secrets",
-        "CLOUD_ENV=CLOUD_ENV:latest, MONGO_DB_URI=MONGO_DB_URI:latest, ALLOWED_ORIGINS=ALLOWED_ORIGINS:latest,
-        FIREBASE_SERVICE_ACCOUNT=FIREBASE_SERVICE_ACCOUNT:latest",
+        "MONGO_DB_URI=connekt-camp-db-uri:latest,FIREBASE_SERVICE_ACCOUNT=connekt-camp-service-account:latest",
       ]
 options:
   logging: CLOUD_LOGGING_ONLY
