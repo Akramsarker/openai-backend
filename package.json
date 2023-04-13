@@ -1,8 +1,8 @@
 {
-  "name": "nuditae-backend",
+  "name": "openai-backend",
   "version": "1.0.0",
   "description": "",
-  "author": "CONNEKT STUDIO",
+  "author": "Akram Sheikh",
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development nodemon app.js",
