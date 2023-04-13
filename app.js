@@ -27,11 +27,8 @@ app.use(
   })
 );
 
-
 app.use("/api", require("./api/status"));
 app.use("/api", require("./api/person"));
-app.use("/api", require("./api/course"));
-app.use("/api", require("./api/subscriptions"));
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
